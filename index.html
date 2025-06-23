@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Notes for You ❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Screen -->
+        <div class="card" id="welcome-screen">
+            <div class="heart">❤️</div>
+            <h1>Welcome to Your Love Note</h1>
+            <p>Let's create something special together</p>
+            <button class="btn" id="start-btn">Begin Your Love Story</button>
+        </div>
+
+        <!-- Name Input Screen -->
+        <div class="card hidden" id="name-screen">
+            <h2>What's your name, beautiful soul?</h2>
+            <input type="text" id="user-name" placeholder="Enter your name" class="input-field">
+            <button class="btn" id="name-submit">Continue</button>
+        </div>
+
+        <!-- Question Screen -->
+        <div class="card hidden" id="question-screen">
+            <div class="heart small">💝</div>
+            <h2>Hello, <span id="display-name">Friend</span>!</h2>
+            <p class="question-text">What's something you love about yourself today?</p>
+            <form id="love-form" action="/submit" method="POST">
+                <input type="hidden" name="name" id="hidden-name">
+                <input type="hidden" name="user-answer" id="user-answer-hidden">
+                <textarea name="message" id="user-answer" class="input-field" rows="4" placeholder="Share your thoughts..." required></textarea>
+                <button type="submit" class="btn" id="submit-answer">Share with Love</button>
+            </form>
+        </div>
+
+        <!-- Thank You Screen -->
+        <div class="card hidden" id="thank-you-screen">
+            <div class="heart animate__animated animate__heartBeat animate__infinite">💖</div>
+            <h2>Thank You, <span id="final-name"></span>!</h2>
+            <p>Your response has been saved with love.</p>
+            <p class="love-note">Remember, you are amazing just as you are! 💕</p>
+        </div>
+    </div>
+
+    <div class="floating-hearts"></div>
+    <script src="script.js"></script>
+</body>
+</html>
