@@ -175,47 +175,43 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        loveForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const answer = userAnswer.value.trim();
-            if (!answer) {
-                userAnswer.style.borderColor = '#ff4757';
-                setTimeout(() => {
-                    userAnswer.style.borderColor = '#f0f0f0';
-                }, 1000);
-                return;
-            }
+        // Update the form action to use Netlify Functions
+loveForm.action = '/.netlify/functions/submit-form';
 
-            submitAnswer.disabled = true;
-            submitAnswer.textContent = 'Sending...';
+loveForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const submitBtn = loveForm.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = 'Sending...';
 
-            try {
-                const formData = new FormData();
-                formData.append('name', document.getElementById('hidden-name').value || 'Anonymous');
-                formData.append('message', userAnswer.value);
-                
-                const response = await fetch(loveForm.action, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: new URLSearchParams(formData).toString()
-                });
+    try {
+        const response = await fetch('/.netlify/functions/submit-form', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: document.getElementById('hidden-name').value || 'Anonymous',
+                message: userAnswer.value
+            })
+        });
 
-                if (response.ok) {
-                    showFormMessage('Love note submitted successfully!', 'success');
-                    hideScreen('question-screen');
-                    showScreen('final-screen');
-                    userAnswer.value = '';
-                } else {
-                    throw new Error('Submission failed');
-                }
-            } catch (error) {
-                showFormMessage('Error submitting love note. Please try again.', 'error');
-            } finally {
-                submitAnswer.disabled = false;
-                submitAnswer.textContent = 'Submit Answer';
-            }
+        const result = await response.json();
+
+        if (response.ok) {
+            showScreen('thank-you-screen');
+        } else {
+            throw new Error(result.error || 'Failed to send message');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to send your love note. Please try again later.');
+    } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnText;
+    }
         });
     }
 });
